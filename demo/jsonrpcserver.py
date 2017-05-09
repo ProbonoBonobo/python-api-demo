@@ -1,9 +1,6 @@
 # rpcserver.py
 import json
 import os
-import sys
-sys.path.append("/Users/kz/Projects/redux-dev/redux/examples/rnn-party/api")
-from authenticate import get_authkey, print_authkey,return_authkey, print_sections, Config
 
 class RPCHandler:
     def __init__(self):
@@ -48,19 +45,11 @@ def sub(x, y):
 def ls():
     return os.listdir()
 
-def print_creds():
-    msg = ["======== SUPER SECRET CREDENTIALS =========",
-           "Authkey is {} (type: {})".format(get_authkey(), type(get_authkey())),
-           "====== END OF SUPER SECRET CREDENTIALS ====="]
-    return "\n".join(msg)
-
 # Register with a handler
 handler = RPCHandler()
 handler.register_function(add)
 handler.register_function(sub)
 handler.register_function(ls)
-handler.register_function(print_creds)
 
 # Run the server
-
-rpc_server(handler, ('localhost', 17000), authkey=get_authkey())
+rpc_server(handler, ('localhost', 17000), authkey=b'peekaboo')

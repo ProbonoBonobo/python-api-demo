@@ -1,9 +1,4 @@
 import json
-import sys
-import os
-sys.path.append("/Users/kz/Projects/redux-dev/redux/examples/rnn-party/api")
-
-from authenticate import print_sections, get_authkey, print_authkey,return_authkey, Config
 
 class RPCProxy:
     def __init__(self, connection):
@@ -17,12 +12,10 @@ class RPCProxy:
 
 # Example use
 from multiprocessing.connection import Client
-print(Config())
-c = Client(('localhost', 17000), authkey=get_authkey())
+c = Client(('localhost', 17000), authkey=b'peekaboo')
 proxy = RPCProxy(c)
 print(proxy.add(2, 3))
 print(proxy.sub(2, 3))
-
 try:
     print(proxy.sub([1, 2], 4))
 except Exception as e:

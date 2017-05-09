@@ -1,10 +1,6 @@
 # rpcserver.py
-import json
-import os
-import sys
-sys.path.append("/Users/kz/Projects/redux-dev/redux/examples/rnn-party/api")
-from authenticate import get_authkey, print_authkey,return_authkey, print_sections, Config
 
+import pickle
 class RPCHandler:
     def __init__(self):
         self._functions = { }
@@ -16,13 +12,13 @@ class RPCHandler:
         try:
             while True:
                 # Receive a message
-                func_name, args, kwargs = json.loads(connection.recv())
+                func_name, args, kwargs = pickle.loads(connection.recv())
                 # Run the RPC and send a response
                 try:
                     r = self._functions[func_name](*args,**kwargs)
-                    connection.send(json.dumps(r))
+                    connection.send(pickle.dumps(r))
                 except Exception as e:
-                    connection.send(json.dumps(str(e)))
+                    connection.send(pickle.dumps(e))
         except EOFError:
              pass
 
@@ -45,22 +41,10 @@ def add(x, y):
 def sub(x, y):
     return x - y
 
-def ls():
-    return os.listdir()
-
-def print_creds():
-    msg = ["======== SUPER SECRET CREDENTIALS =========",
-           "Authkey is {} (type: {})".format(get_authkey(), type(get_authkey())),
-           "====== END OF SUPER SECRET CREDENTIALS ====="]
-    return "\n".join(msg)
-
 # Register with a handler
 handler = RPCHandler()
 handler.register_function(add)
 handler.register_function(sub)
-handler.register_function(ls)
-handler.register_function(print_creds)
 
 # Run the server
-
-rpc_server(handler, ('localhost', 17000), authkey=get_authkey())
+rpc_server(handler, ('localhost', 17000), authkey=b'hello')
